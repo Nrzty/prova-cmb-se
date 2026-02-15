@@ -1,0 +1,4 @@
+# This file is a fallback for running compose from repository root.
+# If you keep the Laravel project in a subfolder, you can `docker compose -f docker-compose.root.yml up -d --build`.
+# Prefer keeping a single docker-compose.yml at the repo root for the best clone-and-run experience.
+

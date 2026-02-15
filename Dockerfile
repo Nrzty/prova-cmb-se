@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 
-FROM php:8.2-fpm-alpine
+FROM php:8.4-fpm-alpine
 
 # System deps
 RUN apk add --no-cache \
@@ -30,6 +30,9 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www/html
 
+# Avoid git 'dubious ownership' during composer install (some deps/scripts inspect git)
+RUN git config --global --add safe.directory /var/www/html
+
 # Copy app
 COPY . .
 
@@ -46,4 +49,3 @@ RUN mkdir -p storage bootstrap/cache \
 EXPOSE 9000
 
 CMD ["php-fpm"]
-

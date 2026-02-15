@@ -1,25 +1,18 @@
 # Sistema de Gestão de Ocorrências — Prova Técnica
 
-Backend em **Laravel (PHP 8.2+)** para receber eventos de um sistema externo, consolidar ocorrências, controlar ciclo de vida, registrar auditoria e processar operações de forma assíncrona.
+Backend em **Laravel** para receber eventos de um sistema externo, consolidar ocorrências, controlar ciclo de vida, registrar auditoria e processar operações de forma assíncrona.
+
+> Nota de compatibilidade: o `composer.lock` atual exige **PHP >= 8.4** (ex.: Symfony 8). Por isso o Dockerfile usa PHP 8.4.
 
 ---
 
 ## 1) Como rodar backend e frontend
 
-Este repositório contém o backend Laravel  dentro do próprio projeto.
+# TL;DR (após clonar)
 
-### Eu recomendo: Docker (API + Postgres + Redis + Nginx)
-
-**Pré-requisitos**
-- Docker + Docker Compose
-
-**Subir tudo**
 ```bash
+cd prova-api
 docker compose up -d --build
-```
-
-**Preparar a aplicação (primeira vez)**
-```bash
 docker compose exec app cp .env.example .env
 docker compose exec app php artisan key:generate
 docker compose exec app php artisan migrate
@@ -166,3 +159,29 @@ Sugestões pragmáticas:
 - **DLQ formal** (fila `dlq`) + rotinas de re-drive automatizadas.
 - **Observabilidade completa**: logs estruturados padronizados + métricas + tracing.
 - **Escalabilidade**: workers horizontais, particionamento por unidade/região.
+
+---
+
+## Rodando com Docker (recomendado)
+
+> Importante: execute os comandos **na pasta onde está o arquivo `docker-compose.yml`**.
+
+```bash
+cd prova-api
+```
+
+Suba a stack:
+
+```bash
+docker compose up -d --build
+```
+
+Ver logs (note o parâmetro correto `--tail`):
+
+```bash
+docker compose logs --tail=200 --no-color
+```
+
+### Versão do PHP
+
+A imagem Docker usa **PHP 8.4** porque o `composer.lock` atual possui dependências (ex.: Symfony 8) que exigem `php >= 8.4`.
