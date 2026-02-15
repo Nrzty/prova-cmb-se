@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Enums\EventEnums;
+namespace App\Enums\EventInboxEnums;
 enum EventInboxSource: string
 {
     case EXTERNAL_SYSTEM = 'sistema_externo';

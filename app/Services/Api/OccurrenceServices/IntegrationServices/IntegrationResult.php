@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Integration;
+namespace App\Services\Api\OccurrenceServices\IntegrationServices;
 use App\Enums\OccurrenceIntegrationStatus;
 
 class IntegrationResult
@@ -9,16 +9,6 @@ class IntegrationResult
         private string $commandId,
         private OccurrenceIntegrationStatus $status
     ){ }
-
-    public function isCreated() : bool
-    {
-        return $this->status === OccurrenceIntegrationStatus::CREATED;
-    }
-
-    public function isDuplicated() : bool
-    {
-        return $this->status === OccurrenceIntegrationStatus::DUPLICATED;
-    }
 
     public function getCommandId(): string
     {

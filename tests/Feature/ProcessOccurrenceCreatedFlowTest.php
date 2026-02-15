@@ -2,13 +2,13 @@
 
 namespace Tests\Feature;
 
-use App\Enums\EventEnums\EventInboxSource;
-use App\Enums\EventEnums\EventInboxStatus;
-use App\Enums\EventEnums\EventInboxType;
+use App\Enums\EventInboxEnums\EventInboxSource;
+use App\Enums\EventInboxEnums\EventInboxStatus;
+use App\Enums\EventInboxEnums\EventInboxType;
 use App\Models\AuditLog;
 use App\Models\EventInbox;
 use App\Models\Occurrence;
-use App\Services\Integration\ProcessOccurrenceCreatedService;
+use App\Services\Api\OccurrenceServices\IntegrationServices\ProcessOccurrenceCreatedService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 

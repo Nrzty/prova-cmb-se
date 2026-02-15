@@ -17,6 +17,8 @@ return new class extends Migration
             $table->string('resource_code');
             $table->string('status');
             $table->timestamps();
+
+            $table->unique(['occurrence_id', 'resource_code']);
         });
     }
 

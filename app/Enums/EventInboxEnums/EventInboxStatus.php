@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Enums\EventEnums;
+namespace App\Enums\EventInboxEnums;
 enum EventInboxStatus: string
 {
     case PENDING = 'pending';

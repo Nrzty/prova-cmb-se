@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Services\Integration;
+namespace App\Services\Api\OccurrenceServices\IntegrationServices;
 
-use App\Enums\EventEnums\EventInboxStatus;
-use App\Enums\EventEnums\EventInboxType;
+use App\Enums\EventInboxEnums\EventInboxStatus;
+use App\Enums\EventInboxEnums\EventInboxType;
 use App\Enums\OccurrenceEnums\OccurrenceStatus;
-use App\Enums\SqlEnums\SqlUniqueViolation;
 use App\Models\AuditLog;
 use App\Models\EventInbox;
 use App\Models\Occurrence;
+use App\Support\Database\DatabaseErrorHelper;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
 
@@ -47,7 +47,7 @@ class ProcessOccurrenceCreatedService
                 $wasCreated = true;
 
             } catch (QueryException $exception) {
-                if (! $this->isUniqueViolation($exception))
+                if (! DatabaseErrorHelper::isUniqueViolation($exception))
                 {
                     throw $exception;
                 }
@@ -84,12 +84,5 @@ class ProcessOccurrenceCreatedService
                 'processed_at' => now(),
             ]);
         });
-    }
-
-    private function isUniqueViolation(QueryException $exception): bool
-    {
-        $errorCode = (int) ($exception->errorInfo[1] ?? 0);
-
-        return in_array($errorCode, array_column(SqlUniqueViolation::cases(), 'value'));
     }
 }

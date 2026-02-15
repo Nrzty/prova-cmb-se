@@ -1,15 +1,16 @@
 <?php
 
-namespace App\Services\Integration;
+namespace App\Services\Api\OccurrenceServices\IntegrationServices;
+
 use App\DTOs\OccurrenceDTO;
-use App\Enums\EventEnums\EventInboxSource;
-use App\Enums\EventEnums\EventInboxStatus;
-use App\Enums\EventEnums\EventInboxType;
+use App\Enums\EventInboxEnums\EventInboxSource;
+use App\Enums\EventInboxEnums\EventInboxStatus;
+use App\Enums\EventInboxEnums\EventInboxType;
 use App\Enums\OccurrenceIntegrationStatus;
-use App\Enums\SqlEnums\SqlUniqueViolation;
 use App\Exceptions\IdempotencyConflictException;
-use App\Jobs\ProcessOccurrenceCreatedJob;
+use App\Jobs\OccurrenceJobs\ProcessOccurrenceCreatedJob;
 use App\Models\EventInbox;
+use App\Support\Database\DatabaseErrorHelper;
 use Illuminate\Database\QueryException;
 
 class RegisterOccurrenceCommandService
@@ -36,7 +37,7 @@ class RegisterOccurrenceCommandService
             return new IntegrationResult($eventInbox->id, OccurrenceIntegrationStatus::CREATED);
 
         } catch (QueryException $exception) {
-            if (! $this->isUniqueViolation($exception))
+            if (! DatabaseErrorHelper::isUniqueViolation($exception))
             {
                 throw $exception;
             }
@@ -58,12 +59,5 @@ class RegisterOccurrenceCommandService
 
             throw new IdempotencyConflictException("O payload enviado diverge do registro existente.");
         }
-    }
-
-    private function isUniqueViolation(QueryException $exception): bool
-    {
-        $errorCode = (int) ($exception->errorInfo[1] ?? 0);
-
-        return in_array($errorCode, array_column(SqlUniqueViolation::cases(), 'value'));
     }
 }

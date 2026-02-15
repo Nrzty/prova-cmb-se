@@ -1,23 +1,19 @@
 <?php
 
-namespace App\Jobs;
+namespace App\Jobs\DispatchJobs;
 
-use App\Enums\EventEnums\EventInboxStatus;
+use App\Enums\EventInboxEnums\EventInboxStatus;
 use App\Models\EventInbox;
-use App\Services\Integration\ProcessOccurrenceCreatedService;
 use Exception;
+use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
-class ProcessOccurrenceCreatedJob implements ShouldQueue
+class ProcessDispatchClosedJob implements ShouldQueue
 {
-    use Queueable;
-    use Dispatchable;
-    use InteractsWithQueue;
-    use SerializesModels;
+    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     public int $tries = 3;
 
@@ -30,7 +26,7 @@ class ProcessOccurrenceCreatedJob implements ShouldQueue
         private string $eventInboxId,
     ) { }
 
-    public function handle(ProcessOccurrenceCreatedService $processOccurrenceCreatedService): void
+    public function handle(\App\Services\Api\Dispatch\ProcessDispatchClosedService $processDispatchClosedService): void
     {
         $event = EventInbox::find($this->eventInboxId);
 
@@ -53,7 +49,7 @@ class ProcessOccurrenceCreatedJob implements ShouldQueue
                 'max_tries' => $this->tries,
             ]);
 
-            $processOccurrenceCreatedService->process($this->eventInboxId);
+            $processDispatchClosedService->process($this->eventInboxId);
 
             logger()->info('Processed event inbox', [
                 'event_inbox_id' => $event->id,

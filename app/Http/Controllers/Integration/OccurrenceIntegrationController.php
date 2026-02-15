@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Integration;
 use App\DTOs\OccurrenceDTO;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Integration\StoreExternalOccurrenceRequest;
-use App\Services\Integration\RegisterOccurrenceCommandService;
+use App\Services\Api\OccurrenceServices\IntegrationServices\RegisterOccurrenceCommandService;
 use Illuminate\Support\Carbon;
 
 class OccurrenceIntegrationController extends Controller

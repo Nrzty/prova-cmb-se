@@ -2,12 +2,12 @@
 
 namespace Tests\Feature;
 
-use App\Enums\EventEnums\EventInboxSource;
-use App\Enums\EventEnums\EventInboxStatus;
-use App\Enums\EventEnums\EventInboxType;
-use App\Jobs\ProcessOccurrenceCreatedJob;
+use App\Enums\EventInboxEnums\EventInboxSource;
+use App\Enums\EventInboxEnums\EventInboxStatus;
+use App\Enums\EventInboxEnums\EventInboxType;
+use App\Jobs\OccurrenceJobs\ProcessOccurrenceCreatedJob;
 use App\Models\EventInbox;
-use App\Services\Integration\ProcessOccurrenceCreatedService;
+use App\Services\Api\OccurrenceServices\IntegrationServices\ProcessOccurrenceCreatedService;
 use Exception;
 use Illuminate\Contracts\Queue\Job as JobContract;
 use Illuminate\Foundation\Testing\RefreshDatabase;
