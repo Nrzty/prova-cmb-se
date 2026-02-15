@@ -36,7 +36,9 @@ class OccurrenceController extends Controller
 
         $perPage = (int) $request->query('per_page', 15);
 
-        $result = $this->occurrenceService->list($filters, $perPage);
+        $page = (int) $request->query('page', 1);
+
+        $result = $this->occurrenceService->list($filters, $perPage, $page);
 
         return OccurrenceResource::collection($result);
     }

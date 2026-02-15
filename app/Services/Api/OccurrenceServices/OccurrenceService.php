@@ -16,32 +16,41 @@ use App\Services\Api\OccurrenceServices\IntegrationServices\IntegrationResult;
 use App\Support\Database\DatabaseErrorHelper;
 use Illuminate\Database\QueryException;
 use LogicException;
+use Illuminate\Support\Facades\Cache;
 
 class OccurrenceService
 {
     private const LIMIT_PER_PAGE = 100;
+    private const LIST_CACHE_TTL_SECONDS = 30;
 
     public function __construct(
 
     ) { }
 
-    public function list(OccurrenceFilterDTO $filters, int $amountPerPage)
+    public function list(OccurrenceFilterDTO $filters, int $amountPerPage, int $page)
     {
         $perPage = min($amountPerPage, self::LIMIT_PER_PAGE);
 
-        $query = Occurrence::query();
+        $status = $filters->getStatus()?->value ?? 'all';
+        $type = $filters->getType()?->value ?? 'all';
 
-        if ($filters->getStatus())
-        {
-            $query->where("status", $filters->getStatus()->value);
-        }
+        $cacheKey = "occurrences:list:status={$status}:type={$type}:perPage={$perPage}:page={$page}";
 
-        if ($filters->getType())
-        {
-            $query->where("type", $filters->getType()->value);
-        }
+        return Cache::remember($cacheKey, self::LIST_CACHE_TTL_SECONDS, function () use ($filters, $perPage, $page) {
+            $query = Occurrence::query();
 
-        return $query->paginate($perPage);
+            if ($filters->getStatus())
+            {
+                $query->where('status', $filters->getStatus()->value);
+            }
+
+            if ($filters->getType())
+            {
+                $query->where('type', $filters->getType()->value);
+            }
+
+            return $query->paginate($perPage, ['*'], 'page', $page);
+        });
     }
 
     public function startOccurrence(string $occurrenceId, string $idempotencyKey, array $meta = [])
